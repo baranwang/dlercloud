@@ -12,7 +12,7 @@ const dlerFetch = <T,>(urlPath: string, body: any = {}): Promise<T> => fetch(`ht
 const paramsSchema = z.object({
 	email: z.string({ message: 'email is required' }),
 	passwd: z.string({ message: 'password is required' }),
-	type: z.enum(['smart', 'ss', 'vmess', 'trojan']).optional().default('smart'),
+	type: z.enum(['smart', 'ss', 'vmess', 'trojan', 'ss2022']).optional().default('smart'),
 })
 
 export default {
@@ -40,7 +40,9 @@ export default {
 
 		const managedResp = await dlerFetch<{ [key: string]: string }>('/api/v1/managed/clash', { access_token: loginResp.data.token })
 
-		const resp = await fetch(managedResp[params.data.type])
+		const resp = await fetch(managedResp[params.data.type], {
+			headers: request.headers,
+		})
 
 		await dlerFetch('/api/v1/logout', { access_token: loginResp.data.token })
 
